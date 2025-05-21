@@ -1,0 +1,23 @@
+{
+  "type": "array",
+  "items": [
+    { "type": "string" },
+    { "type": "integer" },
+    { "type": "boolean" },
+    {
+      "type": "object",
+      "properties": {
+        "driveType": { "type": "string" }
+      },
+      "required": ["driveType"],
+      "additionalProperties": false
+    },
+    {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    { "type": ["null"] }
+  ],
+  "minItems": 6,
+  "maxItems": 6
+}

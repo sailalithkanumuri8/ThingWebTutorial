@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TeslaCar",
+  "type": "object",
+  "properties": {
+    "make": { "type": "string" },
+    "year": { "type": "integer" },
+    "isElectric": { "type": "boolean" },
+    "previousOwners": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "specs": {
+      "type": "object",
+      "properties": {
+        "topSpeed": { "type": "number" },
+        "acceleration": { "type": "number" },
+        "range": { "type": "number" },
+        "driveType": { "type": "string" }
+      },
+      "required": ["topSpeed", "acceleration", "range", "driveType"]
+    },
+    "lastService": { "type": ["null"] }
+  },
+  "required": ["make", "year", "isElectric", "previousOwners", "specs", "lastService"]
+}

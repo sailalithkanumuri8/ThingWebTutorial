@@ -1,0 +1,13 @@
+{
+  "make": "Tesla",
+  "year": 2025,
+  "isElectric": true,
+  "previousOwners": ["Sai", "SpaceX"],
+  "specs": {
+    "topSpeed": 250,
+    "acceleration": 1.9,
+    "range": 620,
+    "driveType": "All-Wheel Drive"
+  },
+  "lastService": null
+}
