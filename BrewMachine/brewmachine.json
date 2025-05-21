@@ -1,0 +1,64 @@
+{
+  "@context": "https://www.w3.org/2019/wot/td/v1",
+  "title": "BrewMachine",
+  "id": "urn:dev:ops:brewmachine-001",
+  "securityDefinitions": {
+    "no_sec": { "scheme": "nosec" }
+  },
+  "security": ["no_sec"],
+  "properties": {
+    "state": {
+      "type": "string",
+      "enum": ["idle", "brewing", "grinding", "error", "off"],
+      "forms": [{ "href": "https://brew.example.com/state" }]
+    },
+    "water": {
+      "type": "number",
+      "forms": [{ "href": "https://brew.example.com/water" }]
+    },
+    "beans": {
+      "type": "number",
+      "forms": [{ "href": "https://brew.example.com/beans" }]
+    },
+    "bin": {
+      "type": "number",
+      "forms": [{ "href": "https://brew.example.com/bin" }]
+    }
+  },
+  "actions": {
+    "brew": {
+      "input": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "size": { "type": "string" }
+        }
+      },
+      "forms": [{ "href": "https://brew.example.com/brew" }]
+    },
+    "stop": {
+      "forms": [{ "href": "coap://brew.example.com/stop" }]
+    },
+    "powerOff": {
+      "forms": [{ "href": "https://brew.example.com/off" }]
+    }
+  },
+  "events": {
+    "lowWater": {
+      "data": { "type": "string" },
+      "forms": [{ "href": "https://brew.example.com/events/lowWater" }]
+    },
+    "lowBeans": {
+      "data": { "type": "string" },
+      "forms": [{ "href": "https://brew.example.com/events/lowBeans" }]
+    },
+    "binFull": {
+      "data": { "type": "string" },
+      "forms": [{ "href": "https://brew.example.com/events/binFull" }]
+    },
+    "error": {
+      "data": { "type": "string" },
+      "forms": [{ "href": "https://brew.example.com/events/error" }]
+    }
+  }
+}

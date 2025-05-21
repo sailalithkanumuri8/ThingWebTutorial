@@ -1,0 +1,31 @@
+A cool mashup idea is when the brew machine starts brewing, music from spotify, for example will automatically play.
+
+The idea behind this is that since coffee is normally drank in the morning, there is no better morning than to listen to music and drink coffee with it.
+Also, by playing music, that will cover up the wait time to actually make the coffee.
+
+An extension could be that while the coffee is brewing, more energetic music is played, and that when brewing is done, calm music is played. This is to
+adjust to the situation and making the overall experience for the user better.
+
+Example code:
+WoT.produce({
+  title: "MusicController",
+  actions: {
+    playChill: {},
+    playEnergetic: {},
+    stop: {}
+  }
+}).then(thing => {
+  thing.setActionHandler("playChill", async () => {
+    console.log("Playing chill playlist...");
+  });
+
+  thing.setActionHandler("playEnergetic", async () => {
+    console.log("Playing energetic playlist...");
+  });
+
+  thing.setActionHandler("stop", async () => {
+    console.log("Stopping music...");
+  });
+
+  thing.expose().then(() => console.log("MusicController is ready"));
+});
