@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "led": {"type": "integer"},
+    "color": {
+      "type": "object",
+      "properties": {
+        "red": { "type": "integer" },
+        "green": { "type": "integer" },
+        "blue": { "type": "integer" }
+      }
+    }
+  },
+  "additionalProperties": {"type": "array"}
+}
