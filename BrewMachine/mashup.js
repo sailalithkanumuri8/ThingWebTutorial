@@ -24,27 +24,30 @@ servient.start().then(async (WoT) => {
   const coffeeMachine = await WoT.consume(coffeeTD);
   const musicController = await WoT.consume(musicTD);
 
-  let lastBrewingState = false;
+  let isMusicPlaying = false;
 
   setInterval(async () => {
     try {
       const brewingProp = await coffeeMachine.readProperty("brewing");
-      const brewing = await brewingProp.value();
+      const isBrewingCoffee = await brewingProp.value();
 
-      if (!brewing && !lastBrewingState) {
+      if (!isBrewingCoffee) {
         const coffeeType = getRandomCoffee();
-        console.log(`No brewing in progress. Starting coffee: ${coffeeType}`);
+        console.log(`Starting new coffee: ${coffeeType}`);
         await coffeeMachine.invokeAction("brewCoffee", coffeeType);
       }
 
-      if (brewing && !lastBrewingState) {
-        console.log("Brewing just started. Activating music");
-        await musicController.invokeAction("startBrewing");
+      if (isBrewingCoffee && !isMusicPlaying) {
+        console.log("Brewing detected. Playing music");
+        await musicController.invokeAction("playMusic");
+        isMusicPlaying = true;
       }
-
-      lastBrewingState = brewing;
+      
+      if (!isBrewingCoffee) {
+        isMusicPlaying = false;
+      }
     } catch (error) {
       console.error("Mashup error:", error);
     }
-  }, 1000);
+  }, 5000);
 });

@@ -1,31 +1,46 @@
-const Servient = require("@node-wot/core").Servient;
+const { Servient } = require("@node-wot/core");
 const HttpServer = require("@node-wot/binding-http").HttpServer;
 const CoapServer = require("@node-wot/binding-coap").CoapServer;
 
-async function main() {
-  const servient = new Servient();
-  servient.addServer(new HttpServer({ port: 8080 }));
-  servient.addServer(new CoapServer());
+const servient = new Servient();
+servient.addServer(new HttpServer({ port: 8080 }));
+servient.addServer(new CoapServer());
 
-  const WoT = await servient.start();
+async function simulateBrewing() {
+  console.log("Simulating brewing process");
+}
 
+servient.start().then(async (WoT) => {
   const thing = await WoT.produce({
     title: "BrewMachine",
     id: "urn:dev:ops:brewmachine-001",
+    description: "A smart coffee brewing machine",
     properties: {
       state: {
         type: "string",
         enum: ["idle", "brewing", "grinding", "error", "off"],
         observable: true,
         readOnly: true,
-        initial: "off",
       },
-      water: { type: "number", observable: true, readOnly: true, initial: 100 },
-      beans: { type: "number", observable: true, readOnly: true, initial: 100 },
-      bin: { type: "number", observable: true, readOnly: true, initial: 0 }
+      water: { 
+        type: "number", 
+        observable: true, 
+        readOnly: true, 
+      },
+      beans: { 
+        type: "number", 
+        observable: true, 
+        readOnly: true, 
+      },
+      bin: { 
+        type: "number", 
+        observable: true, 
+        readOnly: true, 
+      }
     },
     actions: {
       brew: {
+        description: "Brew coffee with specific type and size",
         input: {
           type: "object",
           properties: {
@@ -34,8 +49,12 @@ async function main() {
           }
         }
       },
-      stop: {},
-      powerOff: {}
+      stop: {
+        description: "Stop the brewing process"
+      },
+      powerOff: {
+        description: "Power off the machine"
+      }
     },
     events: {
       lowWater: { type: "string" },
@@ -53,15 +72,17 @@ async function main() {
   let brewingTimer;
 
   // Property handlers
-  thing.setPropertyReadHandler("state", async () => currentState);
-  thing.setPropertyReadHandler("water", async () => waterLevel);
-  thing.setPropertyReadHandler("beans", async () => beansLevel);
-  thing.setPropertyReadHandler("bin", async () => binLevel);
+  thing.setPropertyReadHandler("state", () => currentState);
+  thing.setPropertyReadHandler("water", () => waterLevel);
+  thing.setPropertyReadHandler("beans", () => beansLevel);
+  thing.setPropertyReadHandler("bin", () => binLevel);
 
   // Action handlers
   thing.setActionHandler("brew", async (input) => {
     if (currentState === "off") throw new Error("Machine is off");
     if (currentState === "brewing") throw new Error("Already brewing");
+    
+    // Check resources
     if (waterLevel < 10) {
       thing.emitEvent("lowWater", "Not enough water");
       throw new Error("Not enough water");
@@ -77,13 +98,15 @@ async function main() {
 
     currentState = "brewing";
     thing.emitPropertyChange("state");
+    
+    await simulateBrewing();
 
-    // Simulate brewing time
     brewingTimer = setTimeout(() => {
       currentState = "idle";
       waterLevel -= 10;
       beansLevel -= 10;
       binLevel += 10;
+      
       thing.emitPropertyChange("state");
       thing.emitPropertyChange("water");
       thing.emitPropertyChange("beans");
@@ -116,6 +139,4 @@ async function main() {
 
   await thing.expose();
   console.log(`${thing.getThingDescription().title} ready`);
-}
-
-main().catch((err) => console.error(err));
+});
